@@ -51,12 +51,12 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/spring-boot-github-action-demo:latest
   deploy:
-    needs: build
-    runs-on: [aws-ec2]
+    runs-on: ubuntu-latest
     steps:
-      - name: Pull Image from docker hub
-        run: sudo docker pull nhatuan444/spring-boot-github-action-demo:latest
-      - name: Delete old container
-        run: sudo docker rm -f spring-boot-app-container
-      - name: Run Docker Image
-        run: sudo docker run -d -p 8080:8080 --name spring-boot-app-container nhatuan444/spring-boot-github-action-demo
+      - id: deploy
+        uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.1
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_default_region: ap-southeast-1
+          aws_elb_app_port: 8080 # This should match the docker exposed port. Defaults to 3000.
