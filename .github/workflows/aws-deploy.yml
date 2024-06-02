@@ -42,8 +42,7 @@ jobs:
           script: |-
             sudo apt update
             sudo apt install docker.io -y
-            sudo apt-get install python3-pip
-            sudo pip install awscli
+            sudo apt install awscli
             sudo $(aws ecr get-login-password --region  ap-southeast-1 | docker login --username AWS --password-stdin 730335203517.dkr.ecr.region.amazonaws.com)
             sudo docker stop myappcontainer || true
             sudo docker rm myappcontainer || true
