@@ -27,7 +27,7 @@ jobs:
         run: |-
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
-      - name: Deploy docker image to EC2
+      - name: SSH into EC2 instance and deploy
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: aws-deploy
