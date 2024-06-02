@@ -39,12 +39,12 @@ jobs:
           username: ubuntu
           key: ${{ env.PRIVATE_SSH_KEY }}
           envs: PRIVATE_SSH_KEY,REGISTRY,REPOSITORY,IMAGE_TAG,AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_DEFAULT_REGION,AWS_REGION
-          script: |
-            export IMAGE_URI=730335203517.dkr.ecr.ap-southeast-1.amazonaws.com/aws-deploy
-            CONTAINER_NAME=my_app_container
-            docker pull $IMAGE_URI
-            if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-              docker stop $CONTAINER_NAME
-              docker rm $CONTAINER_NAME
-            fi
-            docker run -d --name $CONTAINER_NAME -p 8080:8080 $IMAGE_URI
+          script: |-
+            sudo apt update
+            sudo apt install docker.io -y
+            sudo apt install awscli -y
+            sudo $(aws ecr get-login --no-include-email --region ap-southeast-1);
+            sudo docker stop myappcontainer || true
+            sudo docker rm myappcontainer || true
+            sudo docker pull $REGISTRY/$REPOSITORY:$IMAGE_TAG
+            sudo docker run -d --name myappcontainer -p 8080:8080 $REGISTRY/$REPOSITORY:$IMAGE_TAG
